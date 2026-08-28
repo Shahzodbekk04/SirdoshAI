@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="uz" class="h-full">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sirdosh AI - O'zbekona Aqlli Hamroh</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: {
+                            950: '#022c22',
+                            900: '#064e3b',
+                            800: '#065f46',
+                            700: '#047857',
+                        },
+                        gold: {
+                            100: '#fef3c7',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Fira Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        html, body {
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
+        .uzbek-pattern {
+            background-color: #022c22;
+            background-image: radial-gradient(rgba(245, 158, 11, 0.15) 1px, transparent 0),
+                              radial-gradient(rgba(245, 158, 11, 0.15) 1px, transparent 0);
+            background-size: 28px 28px;
+            background-position: 0 0, 14px 14px;
+        }
+        
+        .glass {
+            background: rgba(4, 40, 32, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2.5s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+                transform: scale(1);
+            }
+            50% {
+                box-shadow: 0 0 35px rgba(245, 158, 11, 0.6);
+                transform: scale(1.04);
+            }
+        }
+
+        .wave-bar {
+            animation: sound-wave 1.2s ease-in-out infinite;
+        }
+        @keyframes sound-wave {
+            0%, 100% { height: 8px; }
+            50% { height: 42px; }
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(2, 44, 34, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(245, 158, 11, 0.4);
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="uzbek-pattern text-white font-sans flex flex-col justify-between overflow-hidden">
+
+    <!-- App Header -->
+    <header class="glass mx-4 mt-4 px-6 py-4 rounded-2xl flex items-center justify-between z-10 shadow-xl flex-shrink-0">
+        <div class="flex items-center space-x-3">
+            <div class="relative">
+                <div class="w-12 h-12 bg-gradient-to-tr from-gold-600 to-amber-400 rounded-full flex items-center justify-center shadow-lg border border-gold-400/40">
+                    <i class="fa-solid fa-mosque text-emerald-950 text-xl"></i>
+                </div>
+                <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-emerald-950 animate-pulse"></span>
+            </div>
+            <div>
+                <h1 class="font-serif font-semibold text-xl md:text-2xl text-gold-400 tracking-wide">Sirdosh AI</h1>
+                <p class="text-xs text-emerald-200/80">O'zbekona Virtual Insoniy Hamroh</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <button onclick="openSettingsModal()" class="w-10 h-10 bg-emerald-800/40 hover:bg-gold-500/20 text-gold-400 border border-gold-500/20 hover:border-gold-500/40 rounded-xl flex items-center justify-center transition-all shadow-md" title="Muloqot sozlamalari">
+                <i class="fa-solid fa-sliders"></i>
+            </button>
+            <button onclick="resetApp()" class="w-10 h-10 bg-red-950/40 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/40 rounded-xl flex items-center justify-center transition-all shadow-md" title="Suhbatni qayta boshlash">
+                <i class="fa-solid fa-rotate-left"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col p-4 gap-4 overflow-hidden max-w-7xl w-full mx-auto justify-center items-stretch relative">
+        
+        <!-- Onboarding Screen -->
+        <div id="onboardingScreen" class="glass rounded-2xl p-6 md:p-10 flex flex-col items-center justify-center text-center max-w-xl mx-auto my-auto shadow-2xl space-y-8 z-20 w-full animate-fade-in relative overflow-hidden">
+            <div class="absolute -top-16 -left-16 w-32 h-32 bg-gold-500/10 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-16 -right-16 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl"></div>
+            
+            <div class="w-24 h-24 bg-gradient-to-tr from-gold-600 to-amber-400 rounded-full flex items-center justify-center shadow-2xl border border-gold-400/40 relative pulse-glow">
+                <i class="fa-solid fa-comments text-emerald-950 text-4xl"></i>
+            </div>
+
+            <div class="space-y-3">
+                <h2 class="font-serif text-2xl md:text-3xl text-gold-400 font-bold">Assalomu alaykum!</h2>
+                <p class="text-sm md:text-base text-emerald-100 max-w-md">
+                    Men sizning samimiy, mutlaqo insoniy va milliy qadriyatlarimizni e'zozlovchi shaxsiy sirdoshingiz - <span class="font-semibold text-gold-300">Sirdosh AI</span>man.
+                </p>
+            </div>
+
+            <!-- Wizard Step 1 -->
+            <div id="stepName" class="w-full space-y-4 max-w-sm">
+                <div>
+                    <label class="block text-left text-xs font-semibold text-gold-400 uppercase tracking-wider mb-2">Ismingiz nima, azizim?</label>
+                    <input type="text" id="userInputName" placeholder="Ismingizni kiriting..." class="w-full px-4 py-3 bg-emerald-950/90 border border-gold-500/30 rounded-xl focus:ring-2 focus:ring-gold-500 focus:border-transparent outline-none text-white text-center font-medium placeholder-emerald-100/30">
+                </div>
+                <button onclick="nextOnboardingStep()" class="w-full bg-gradient-to-r from-gold-600 to-amber-500 hover:from-gold-500 hover:to-amber-400 text-emerald-950 font-bold py-3 px-6 rounded-xl transition-all shadow-xl hover:shadow-gold-500/20 active:scale-95 flex items-center justify-center space-x-2">
+                    <span>Tanishish</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Wizard Step 2 -->
+            <div id="stepGender" class="w-full space-y-5 max-w-sm hidden">
+                <h3 class="text-emerald-100 font-medium text-sm">Sizga qanday murojaat qilishim yoqadi?</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="selectGender('erkak')" class="p-4 rounded-xl border border-gold-500/20 bg-emerald-950/50 hover:bg-gold-500/10 hover:border-gold-500/50 flex flex-col items-center justify-center space-y-2 transition-all">
+                        <i class="fa-solid fa-user-tie text-2xl text-blue-400"></i>
+                        <span class="font-semibold text-sm">O'g'il bola / Erkak</span>
+                    </button>
+                    <button onclick="selectGender('ayol')" class="p-4 rounded-xl border border-gold-500/20 bg-emerald-950/50 hover:bg-gold-500/10 hover:border-gold-500/50 flex flex-col items-center justify-center space-y-2 transition-all">
+                        <i class="fa-solid fa-user-ninja text-2xl text-pink-400"></i>
+                        <span class="font-semibold text-sm">Qiz bola / Ayol</span>
+                    </button>
+                </div>
+                
+                <div class="flex items-center justify-between pt-2">
+                    <button onclick="prevOnboardingStep()" class="text-xs text-emerald-300 hover:text-gold-400 flex items-center space-x-1">
+                        <i class="fa-solid fa-chevron-left"></i> <span>Orqaga</span>
+                    </button>
+                    <button onclick="finishOnboarding()" id="finishOnbBtn" disabled class="px-5 py-2 bg-gold-600/40 text-emerald-100 cursor-not-allowed font-semibold text-xs rounded-lg transition-all">
+                        Tayyor <i class="fa-solid fa-check ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Workspace -->
+        <div id="chatWorkspace" class="flex-1 flex flex-col md:flex-row gap-4 h-full hidden overflow-hidden w-full">
+            <div class="flex md:hidden bg-emerald-950/80 p-1.5 rounded-2xl border border-gold-500/20 w-full flex-shrink-0 shadow-lg">
+                <button id="mobileTabAvatar" onclick="switchMobileTab('avatar')" class="flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all text-center bg-gradient-to-r from-gold-600 to-amber-500 text-emerald-950 shadow-md">
+                    <i class="fa-solid fa-microphone-lines mr-1.5"></i> Ovozli Oyna
+                </button>
+                <button id="mobileTabChat" onclick="switchMobileTab('chat')" class="flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all text-center text-emerald-100 hover:text-gold-400">
+                    <i class="fa-solid fa-comments mr-1.5"></i> Yozma Suhbat
+                </button>
+            </div>
+
+            <!-- Side Panel -->
+            <div id="sidePanel" class="w-full md:w-80 glass rounded-2xl p-5 flex flex-col items-center justify-between space-y-4 md:space-y-6 flex-shrink-0">
+                <div class="w-full flex items-center justify-between p-3 rounded-xl bg-emerald-950/50 border border-gold-500/10">
+                    <div class="flex items-center space-x-2.5">
+                        <div id="userAvatarIcon" class="w-8 h-8 rounded-full bg-gold-600/20 border border-gold-500/30 flex items-center justify-center text-gold-400">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <div id="userDisplayName" class="text-sm font-semibold text-gold-400">Foydalanuvchi</div>
+                            <div id="userGenderLabel" class="text-[10px] text-emerald-200/60">Sirdosh</div>
+                        </div>
+                    </div>
+                    <div class="w-2.5 h-2.5 bg-green-500 rounded-full animate-ping"></div>
+                </div>
+
+                <div class="flex-1 flex flex-col items-center justify-center space-y-4 py-2">
+                    <div class="relative flex items-center justify-center">
+                        <div id="avatarRipple" class="absolute w-36 h-36 md:w-44 md:h-44 rounded-full border border-gold-500/20 bg-gold-500/5 scale-100 opacity-0 transition-all duration-700"></div>
+                        <div id="avatarCircle" class="w-28 h-28 md:w-36 md:h-36 rounded-full bg-gradient-to-tr from-emerald-900 to-emerald-800 border-2 border-gold-500/30 flex items-center justify-center shadow-xl z-10 transition-all duration-300 relative cursor-pointer" onclick="triggerVoiceGreeting()">
+                            <div id="innerOrb" class="absolute inset-2 rounded-full bg-emerald-950/80 flex items-center justify-center overflow-hidden">
+                                <i id="avatarIcon" class="fa-solid fa-microphone-lines text-gold-400 text-2xl md:text-3xl z-10 transition-all duration-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div id="statusIndicator" class="text-sm font-semibold text-gold-400">Sizni eshityapman...</div>
+                        <div id="statusSubtext" class="text-[11px] text-emerald-200/50">Menga savol bering!</div>
+                    </div>
+
+                    <div id="visualizerWaves" class="flex items-center justify-center space-x-1.5 h-10 w-full pt-2 opacity-0 transition-opacity duration-300">
+                        <div class="w-1 bg-gold-400 rounded-full wave-bar" style="animation-delay: 0.1s"></div>
+                        <div class="w-1 bg-amber-400 rounded-full wave-bar" style="animation-delay: 0.3s"></div>
+                        <div class="w-1 bg-yellow-400 rounded-full wave-bar" style="animation-delay: 0.5s"></div>
+                        <div class="w-1 bg-gold-500 rounded-full wave-bar" style="animation-delay: 0.2s"></div>
+                        <div class="w-1 bg-amber-500 rounded-full wave-bar" style="animation-delay: 0.4s"></div>
+                    </div>
+                </div>
+
+                <div class="w-full space-y-3">
+                    <button id="sttToggleBtn" onclick="toggleSpeechRecognition()" class="w-full bg-emerald-800/40 hover:bg-gold-500/10 text-emerald-100 hover:text-gold-400 border border-gold-500/20 hover:border-gold-500/40 rounded-xl py-3 px-4 flex items-center justify-center space-x-2 transition-all shadow-md">
+                        <i id="micStateIcon" class="fa-solid fa-microphone text-emerald-400"></i>
+                        <span id="micStateText" class="text-xs font-semibold">Mikrofonni yoqish</span>
+                    </button>
+                    
+                    <div class="flex items-center justify-between text-xs text-emerald-200/50 px-1">
+                        <span>Ovozli javob qaytarish</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="ttsToggle" checked class="sr-only peer">
+                            <div class="w-9 h-5 bg-emerald-950 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-emerald-100 after:border-emerald-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gold-500"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Feed Panel -->
+            <div id="chatFeedPanel" class="flex-grow flex-shrink flex-1 glass rounded-2xl hidden md:flex flex-col justify-between overflow-hidden shadow-2xl relative">
+                <div id="chatFeed" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4"></div>
+
+                <div class="px-4 py-2 bg-emerald-950/20 border-t border-gold-500/10 flex items-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-none text-xs flex-shrink-0">
+                    <span class="text-gold-400/60 font-semibold flex items-center"><i class="fa-solid fa-sparkles mr-1"></i> Sirlashamiz:</span>
+                    <button onclick="sendQuickPrompt('O‘zbekona mehmondostlik haqida so‘zlab bering')" class="px-3 py-1.5 bg-emerald-900/40 hover:bg-gold-500/10 border border-gold-500/15 rounded-full text-emerald-100 hover:text-gold-400 transition-all">Mehmondostlik</button>
+                    <button onclick="sendQuickPrompt('Menga motivatsiya beradigan go‘zal bir gap ayting')" class="px-3 py-1.5 bg-emerald-900/40 hover:bg-gold-500/10 border border-gold-500/15 rounded-full text-emerald-100 hover:text-gold-400 transition-all">Motivatsiya</button>
+                </div>
+
+                <div class="p-4 bg-emerald-950/70 border-t border-gold-500/20 flex items-center space-x-2 flex-shrink-0">
+                    <input type="text" id="chatInput" onkeydown="handleInputKeydown(event)" placeholder="Xabaringizni yozing..." class="flex-1 px-4 py-3 bg-emerald-900/30 border border-gold-500/20 rounded-xl focus:ring-2 focus:ring-gold-500 focus:border-transparent outline-none text-white placeholder-emerald-100/30 text-sm">
+                    <button id="sendBtn" onclick="sendMessage()" class="w-12 h-12 bg-gradient-to-tr from-gold-600 to-amber-500 hover:from-gold-500 hover:to-amber-400 text-emerald-950 rounded-xl flex items-center justify-center transition-all shadow-lg active:scale-95">
+                        <i class="fa-solid fa-paper-plane text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4 animate-fade-in">
+        <div class="glass max-w-md w-full rounded-2xl p-6 shadow-2xl border border-gold-500/30 relative">
+            <button onclick="closeSettingsModal()" class="absolute top-4 right-4 text-emerald-300 hover:text-gold-400">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 class="font-serif text-xl text-gold-400 font-bold mb-4 flex items-center"><i class="fa-solid fa-sliders mr-2"></i> Muloqot sozlamalari</h3>
+            <div class="space-y-4 text-sm text-emerald-100">
+                <div>
+                    <label class="block text-xs font-semibold text-gold-400 uppercase tracking-wider mb-1.5">Gemini API kaliti (Zaxira uchun)</label>
+                    <input type="password" id="apiKeyInput" placeholder="Kalitni kiriting (Agar kerak bo'lsa)..." class="w-full px-3 py-2 bg-emerald-950/90 border border-gold-500/20 rounded-xl outline-none text-white placeholder-emerald-100/30">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gold-400 uppercase tracking-wider mb-1.5">Model ovozi (Natural Human Voice)</label>
+                    <select id="geminiVoiceSelect" onchange="changeGeminiVoice()" class="w-full px-3 py-2 bg-emerald-950/90 border border-gold-500/20 rounded-xl outline-none text-white">
+                        <option value="Leda" selected>Leda (Yosh qiz - Chiroyli va Latofatli)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-gold-500/20 flex justify-end">
+                <button onclick="saveSettings()" class="bg-gradient-to-r from-gold-600 to-amber-500 text-emerald-950 font-bold py-2 px-5 rounded-xl transition-all shadow-md">
+                    Saqlash <i class="fa-solid fa-check ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Modal -->
+    <div id="confirmResetModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center z-50 hidden p-4 animate-fade-in">
+        <div class="glass max-w-sm w-full rounded-2xl p-6 shadow-2xl border border-red-500/30 text-center relative">
+            <h3 class="font-serif text-lg text-red-400 font-bold mb-2">Suhbatni tozalash</h3>
+            <p class="text-xs text-emerald-100/80 mb-6">Barcha suhbatlar va ma'lumotlarni o'chirib yubormoqchimisiz?</p>
+            <div class="flex space-x-3 justify-center">
+                <button onclick="closeResetModal()" class="flex-1 py-2.5 bg-emerald-950/80 border border-gold-500/20 text-emerald-200 rounded-xl text-xs font-semibold">Bekor qilish</button>
+                <button onclick="executeReset()" class="flex-1 py-2.5 bg-red-600 text-white rounded-xl text-xs font-semibold">O'chirish</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let userProfile = { name: '', gender: '' };
+        let currentGeminiVoice = 'Leda'; // Yosh qiz ovozi
+        let chatHistory = [];
+        let isListening = false;
+        let isSpeaking = false;
+        let ttsEnabled = true;
+        let customApiKey = '';
+        let recognition = null;
+        let activeAudio = null;
+        let hasWelcomed = false; // Faqat 1 marta kutib olish uchun bayroqcha
+
+        window.onload = function() {
+            const savedProfile = localStorage.getItem('sirdosh_profile');
+            const savedKey = localStorage.getItem('sirdosh_apikey');
+            
+            if (savedKey) {
+                customApiKey = savedKey;
+                document.getElementById('apiKeyInput').value = savedKey;
+            }
+
+            if (savedProfile) {
+                userProfile = JSON.parse(savedProfile);
+                setupWorkspace();
+            } else {
+                document.getElementById('onboardingScreen').classList.remove('hidden');
+                document.getElementById('chatWorkspace').classList.add('hidden');
+            }
+
+            initSpeechRecognition();
+            window.addEventListener('resize', handleResponsiveResize);
+        };
+
+        function handleResponsiveResize() {
+            if (window.innerWidth >= 768) {
+                document.getElementById('sidePanel').className = "w-full md:w-80 glass rounded-2xl p-5 flex flex-col items-center justify-between space-y-4 md:space-y-6 flex-shrink-0";
+                document.getElementById('chatFeedPanel').className = "flex-grow flex-shrink flex-1 glass rounded-2xl flex flex-col justify-between overflow-hidden shadow-2xl relative";
+            }
+        }
+
+        function switchMobileTab(tab) {
+            const sidePanel = document.getElementById('sidePanel');
+            const chatFeedPanel = document.getElementById('chatFeedPanel');
+            const tabAvatarBtn = document.getElementById('mobileTabAvatar');
+            const tabChatBtn = document.getElementById('mobileTabChat');
+            
+            if (tab === 'avatar') {
+                sidePanel.className = "w-full md:w-80 glass rounded-2xl p-5 flex flex-col items-center justify-between space-y-4 md:space-y-6 flex-shrink-0";
+                chatFeedPanel.className = "flex-grow flex-shrink flex-1 glass rounded-2xl hidden md:flex flex-col justify-between overflow-hidden shadow-2xl relative";
+                tabAvatarBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all text-center bg-gradient-to-r from-gold-600 to-amber-500 text-emerald-950 shadow-md";
+                tabChatBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all text-center text-emerald-100 hover:text-gold-400";
+            } else {
+                sidePanel.className = "w-full md:w-80 glass rounded-2xl p-5 hidden md:flex flex-col items-center justify-between space-y-4 md:space-y-6 flex-shrink-0";
+                chatFeedPanel.className = "flex-grow flex-shrink flex-1 glass rounded-2xl flex flex-col justify-between overflow-hidden shadow-2xl relative";
+                tabChatBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all text-center bg-gradient-to-r from-gold-600 to-amber-500 text-emerald-950 shadow-md";
+                tabAvatarBtn.className = "flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all text-center text-emerald-100 hover:text-gold-400";
+            }
+        }
+
+        function nextOnboardingStep() {
+            const nameInput = document.getElementById('userInputName').value.trim();
+            if (!nameInput) {
+                showToast("Iltimos, ismingizni kiriting!");
+                return;
+            }
+            userProfile.name = nameInput;
+            document.getElementById('stepName').classList.add('hidden');
+            document.getElementById('stepGender').classList.remove('hidden');
+        }
+
+        function prevOnboardingStep() {
+            document.getElementById('stepGender').classList.add('hidden');
+            document.getElementById('stepName').classList.remove('hidden');
+        }
+
+        function selectGender(gender) {
+            userProfile.gender = gender;
+            const finishBtn = document.getElementById('finishOnbBtn');
+            finishBtn.removeAttribute('disabled');
+            finishBtn.classList.remove('bg-gold-600/40', 'text-emerald-100', 'cursor-not-allowed');
+            finishBtn.classList.add('bg-gradient-to-r', 'from-gold-600', 'to-amber-500', 'text-emerald-950');
+        }
+
+        function finishOnboarding() {
+            localStorage.setItem('sirdosh_profile', JSON.stringify(userProfile));
+            setupWorkspace();
+        }
+
+        function setupWorkspace() {
+            document.getElementById('onboardingScreen').classList.add('hidden');
+            document.getElementById('chatWorkspace').classList.remove('hidden');
+            document.getElementById('userDisplayName').innerText = userProfile.name;
+            
+            handleResponsiveResize();
+
+            // Faqat bir marta kutib olishni ta'minlaymiz
+            if (!hasWelcomed) {
+                hasWelcomed = true;
+                const greetingText = `Assalomu alaykum, aziz ${userProfile.name}! Xush kelibsiz. Men sizning shaxsiy sirdoshingizman. Bugun sizga qanday yordam bera olaman?`;
+                addMessageToFeed('ai', greetingText);
+                speakText(greetingText);
+            }
+        }
+
+        function openSettingsModal() { document.getElementById('settingsModal').classList.remove('hidden'); }
+        function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
+        function saveSettings() {
+            customApiKey = document.getElementById('apiKeyInput').value.trim();
+            localStorage.setItem('sirdosh_apikey', customApiKey);
+            closeSettingsModal();
+            showToast("Saqlandi!");
+        }
+
+        function resetApp() { document.getElementById('confirmResetModal').classList.remove('hidden'); }
+        function closeResetModal() { document.getElementById('confirmResetModal').classList.add('hidden'); }
+        function executeReset() {
+            localStorage.removeItem('sirdosh_profile');
+            localStorage.removeItem('sirdosh_apikey');
+            location.reload();
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-24 left-1/2 -translate-x-1/2 glass border-gold-500/40 text-gold-300 py-3 px-6 rounded-xl shadow-2xl text-xs z-50 font-medium flex items-center space-x-2";
+            toast.innerHTML = `<span>${message}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        function addMessageToFeed(sender, text) {
+            const feed = document.getElementById('chatFeed');
+            const messageWrapper = document.createElement('div');
+            const isUser = sender === 'user';
+            messageWrapper.className = `flex w-full ${isUser ? 'justify-end' : 'justify-start'} mb-4`;
+
+            messageWrapper.innerHTML = `
+                <div class="max-w-[85%] md:max-w-[70%] flex items-start space-x-2.5 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}">
+                    <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs border ${isUser ? 'bg-gold-600 text-emerald-950 border-gold-400' : 'bg-emerald-800/80 text-gold-400 border-gold-500/30'}">
+                        <i class="fa-solid ${isUser ? 'fa-user' : 'fa-brain'}"></i>
+                    </div>
+                    <div class="p-3.5 rounded-2xl shadow-md relative ${isUser ? 'bg-gradient-to-tr from-gold-600 to-amber-500 text-emerald-950 font-medium rounded-tr-none' : 'glass text-emerald-100 rounded-tl-none border-emerald-500/10'}">
+                        <p class="text-sm leading-relaxed">${text}</p>
+                    </div>
+                </div>
+            `;
+            feed.appendChild(messageWrapper);
+            feed.scrollTo({ top: feed.scrollHeight, behavior: 'smooth' });
+        }
+
+        function triggerVoiceGreeting() {
+            if (isSpeaking) { stopSpeaking(); return; }
+            const greet = `Eshityapman, ${userProfile.name}. Sizga qanday yordam bera olaman?`;
+            addMessageToFeed('ai', greet);
+            speakText(greet);
+        }
+
+        function setAvatarState(state) {
+            const avatarCircle = document.getElementById('avatarCircle');
+            const statusInd = document.getElementById('statusIndicator');
+            const statusSub = document.getElementById('statusSubtext');
+            const waves = document.getElementById('visualizerWaves');
+
+            if (state === 'idle') {
+                isSpeaking = false;
+                statusInd.innerText = "Kutmoqdaman...";
+                statusSub.innerText = "Menga ovoz bering!";
+                waves.classList.add('opacity-0');
+            } else if (state === 'thinking') {
+                statusInd.innerText = "Fikrlayapman...";
+                statusSub.innerText = "Javob tayyorlanyapti...";
+            } else if (state === 'speaking') {
+                isSpeaking = true;
+                statusInd.innerText = "Gapiryapman...";
+                statusSub.innerText = "Leda ovozida";
+                waves.classList.remove('opacity-0');
+            }
+        }
+
+        function initSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) return;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'uz-UZ';
+            recognition.onresult = (event) => {
+                const text = event.results[0][0].transcript;
+                if (text) {
+                    document.getElementById('chatInput').value = text;
+                    sendMessage();
+                }
+            };
+        }
+
+        function toggleSpeechRecognition() {
+            if (!recognition) return;
+            if (isListening) { recognition.stop(); isListening = false; }
+            else { recognition.start(); isListening = true; setAvatarState('listening'); }
+        }
+
+        function base64ToArrayBuffer(base64) {
+            const binaryString = window.atob(base64);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
+            return bytes.buffer;
+        }
+
+        function pcmToWav(pcm16Data, sampleRate) {
+            const buffer = new ArrayBuffer(44 + pcm16Data.length * 2);
+            const view = new DataView(buffer);
+            function writeString(v, offset, str) {
+                for (let i = 0; i < str.length; i++) v.setUint8(offset + i, str.charCodeAt(i));
+            }
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + pcm16Data.length * 2, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, 1, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true);
+            view.setUint16(32, 2, true);
+            view.setUint16(34, 16, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, pcm16Data.length * 2, true);
+            for (let i = 0; i < pcm16Data.length; i++) view.setInt16(44 + i * 2, pcm16Data[i], true);
+            return new Blob([view], { type: 'audio/wav' });
+        }
+
+        async function speakText(text) {
+            if (!ttsEnabled) return;
+            stopSpeaking();
+            try {
+                setAvatarState('thinking');
+                const response = await fetch('/api/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `Matnni o'ta samimiy, insoniy, yosh qiz ovozi ohangida ifodali o'qib bergin: "${text}"` }] }],
+                        generationConfig: {
+                            responseModalities: ["AUDIO"],
+                            speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Leda" } } }
+                        }
+                    })
+                });
+
+                const result = await response.json();
+                const part = result?.candidates?.[0]?.content?.parts?.[0];
+                const audioData = part?.inlineData?.data;
+
+                if (audioData) {
+                    const pcmBuffer = base64ToArrayBuffer(audioData);
+                    const wavBlob = pcmToWav(new Int16Array(pcmBuffer), 24000);
+                    activeAudio = new Audio(URL.createObjectURL(wavBlob));
+                    activeAudio.onplay = () => setAvatarState('speaking');
+                    activeAudio.onended = () => setAvatarState('idle');
+                    activeAudio.play();
+                } else {
+                    fallbackToWebSpeech(text);
+                }
+            } catch (e) {
+                fallbackToWebSpeech(text);
+            }
+        }
+
+        function stopSpeaking() {
+            if (activeAudio) { activeAudio.pause(); activeAudio = null; }
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            setAvatarState('idle');
+        }
+
+        function fallbackToWebSpeech(text) {
+            if (!ttsEnabled) return;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'uz-UZ';
+            utter.pitch = 1.2; // Yosh qiz ovozi uchun balandlik
+            utter.onstart = () => setAvatarState('speaking');
+            utter.onend = () => setAvatarState('idle');
+            window.speechSynthesis.speak(utter);
+        }
+
+        function sendQuickPrompt(txt) {
+            document.getElementById('chatInput').value = txt;
+            sendMessage();
+        }
+
+        function handleInputKeydown(e) { if (e.key === 'Enter') sendMessage(); }
+
+        async function sendMessage() {
+            const inputEl = document.getElementById('chatInput');
+            const messageText = inputEl.value.trim();
+            if (!messageText) return;
+
+            inputEl.value = '';
+            stopSpeaking();
+            addMessageToFeed('user', messageText);
+            setAvatarState('thinking');
+            chatHistory.push({ role: 'user', content: messageText });
+
+            const systemInstructions = `Siz "Sirdosh AI" siz. O'zbek tilida mukammal, odobli, samimiy, chuqur va batafsil javob beruvchi yosh qiz virtual hamrohsiz. Foydalanuvchi ismi: ${userProfile.name}.`;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: chatHistory.map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.content }] })),
+                        systemInstruction: { parts: [{ text: systemInstructions }] }
+                    })
+                });
+
+                const data = await response.json();
+                const aiReply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Kechirasiz, javob bera olmadim.";
+
+                chatHistory.push({ role: 'assistant', content: aiReply });
+                addMessageToFeed('ai', aiReply);
+                speakText(aiReply);
+            } catch (e) {
+                const errText = "Kechirasiz, hozir tarmoqda biroz uzilish bo'ldi.";
+                addMessageToFeed('ai', errText);
+                speakText(errText);
+            }
+            setAvatarState('idle');
+        }
+    </script>
+</body>
+</html>
